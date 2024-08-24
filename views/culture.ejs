@@ -1,0 +1,13 @@
+<%- include("partials/header.ejs") %>
+
+<% for (let i = 0; i < culturePosts.length; i++) { %>
+
+<ul>
+<li>
+    <h2><%= culturePosts[i].title %></h2>
+    <p><%=culturePosts[i].content %></p>
+</li>
+</ul>
+
+<% } %>
+<%- include("partials/footer.ejs") %>

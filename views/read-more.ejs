@@ -1,0 +1,12 @@
+<%- include("partials/header.ejs") %>
+    <ul>
+        <li>
+            <h2>
+                <%= posts[index].title %>
+            </h2>
+            <p>
+                <%=posts[index].content %>
+            </p>
+        </li>
+    </ul>
+    <%- include("partials/footer.ejs") %>

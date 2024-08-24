@@ -1,0 +1,35 @@
+<%- include("partials/header.ejs") %>
+
+<body>
+  <h1>Create Post</h1>
+
+  <form action="/create-post" method="post">
+    <label for="type">Post Type</label><br>
+    <select name="type" id="type">
+    <option value="none">none</option>
+    <option value="featured">Featured</option>
+    <option value="longpost">Long Post</option>
+  </select>
+  <br>
+  <label for="category">Post Category</label><br>
+  <select name="category" id="category">
+    <option value="none">none</option>
+    <option value="culture">Culture</option>
+    <option value="business">Business</option>
+    <option value="travel">Travel</option>
+  </select>
+  <br>
+    <label for="title">Title:</label>
+    <br>
+    <input type="text" id="title" name="title" required>
+    <br>
+    <label for="content">Content:</label>
+    <br>
+    <textarea id="content" name="content" rows="4" required></textarea>
+    <br>
+    <button type="submit">Create Post</button>
+  </form>
+
+  <a href="/">Back to Home</a>
+  <%- include("partials/footer.ejs") %>
+

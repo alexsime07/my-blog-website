@@ -1,0 +1,13 @@
+<%- include("partials/header.ejs") %>
+
+<% for (let i = 0; i < travelPosts.length; i++) { %>
+
+<ul>
+<li>
+    <h2><%= travelPosts[i].title %></h2>
+    <p><%=travelPosts[i].content %></p>
+</li>
+</ul>
+
+<% } %>
+<%- include("partials/footer.ejs") %>

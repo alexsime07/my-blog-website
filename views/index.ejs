@@ -1,0 +1,153 @@
+<%- include("partials/header.ejs") %>
+
+<main class="container">
+
+<!-- Main featured post -->
+
+  <div class="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+    <div class="col-lg-6 px-0">
+      <!--Displaying the latest featured post with only the first 120 characters on the home page-->
+        <h1 class="display-4 fst-italic" id="mainh1"> <% if (featuredPosts[0]) { %>  <%= featuredPosts[featuredPosts.length -1].title%> <% } else { %> <%= 'No Posts Yet' %> <% } %></h1>
+        <p class="lead my-3">
+          <% if (featuredPosts[0]) { %>
+          <%= featuredPosts[featuredPosts.length -1].content.substring(0, 120) %>...
+          </p>
+          <a href="/read-more/featured-posts/<%= featuredPosts.length-1 %>">Continue Reading</a>
+          <% } else { %>
+          <p class="lead my-3">Multiple lines of text that form the lede, informing new readers quickly and efficiently about what’s most interesting in this post’s contents.</p>
+          <% } %>  
+    </div>
+  </div>
+
+
+  <div class="row mb-2">
+    <div class="col-md-6">
+      <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+        <div class="col p-4 d-flex flex-column position-static">
+          <strong class="d-inline-block mb-2 text-primary-emphasis">Culture</strong>
+          <!--Displaying the most recent culture post-->
+          <% if (culturePosts.length >= 1) { %>
+          <h3 class="mb-0"><%= culturePosts[culturePosts.length -1].title %></h3>
+          <% } else { %>
+            <h3 class="mb-0">Post title</h3>
+            <% } %>
+          <div class="mb-1 text-body-secondary"><%= culturePosts[culturePosts.length-1].fullDate %></div>
+          <% if (culturePosts.length >= 1) { %>
+            <p class="card-text mb-auto"><%= culturePosts[culturePosts.length -1].content.substring(0, 120) %>...</p>
+            <% } else { %>
+              <p class="card-text mb-auto">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
+              <% } %>
+          <a href="read-more/culture-posts/<%= culturePosts.length -1 %>" class="icon-link gap-1 icon-link-hover stretched-link">
+            Continue reading
+            <svg class="bi"><use xlink:href="#chevron-right"></use></svg>
+          </a>
+        </div>
+        <div class="col-auto d-none d-lg-block">
+          <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+        <div class="col p-4 d-flex flex-column position-static">
+          <strong class="d-inline-block mb-2 text-success-emphasis">Business</strong>
+          <% if (businessPosts.length >= 1) { %>
+            <h3 class="mb-0"><%= businessPosts[0].title %></h3>
+            <% } else { %>
+              <h3 class="mb-0">Post title</h3>
+              <% } %>
+          <div class="mb-1 text-body-secondary"><%= businessPosts[businessPosts.length-1].fullDate %></div>
+          <% if (businessPosts.length >= 1) { %>
+            <p class="card-text mb-auto"><%= businessPosts[0].content.substring(0, 120) %>...</p>
+            <% } else { %>
+              <p class="card-text mb-auto">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
+              <% } %>
+             <a href="/read-more/business-posts/<%= businessPosts.length-1 %>" class="icon-link gap-1 icon-link-hover stretched-link">
+            Continue reading
+            <svg class="bi"><use xlink:href="#chevron-right"></use></svg>
+          </a>
+        </div>
+        <div class="col-auto d-none d-lg-block">
+          <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-5">
+    <div class="col-md-8">
+      <h2><a href="/create-post">Create New Post</a></h2>
+      <h2>Posts</h2>
+<% if (posts.length > 0) { %>
+  <ul>
+    <% posts.forEach((post, index) => { %>
+      <li class="list-group-item">
+        <h3><%= post.title %></h3>
+        <p><%= post.content.substring(0,400) %>...</p>
+        <a href="/edit-post/<%= index %>">Edit</a> | 
+        <a href="/delete-post/<%= index %>">Delete</a> |
+        <a href="/read-more/<%= index %>">Read More</a>
+      </li>
+    <% }); %>
+  </ul>
+<% } else { %>
+  <p>No posts available.</p>
+<% } %>
+
+    </div>
+
+    <div class="col-md-4">
+      <div class="position-sticky" style="top: 2rem;">
+        <div class="p-4 mb-3 bg-body-tertiary rounded">
+          <div id="weather-container">
+            <h1>Get Weather</h1>
+            <div>
+              <input type="text" id="city-input" placeholder="Enter city name" />
+              <button id="get-weather-btn">Get Weather</button>
+            </div>
+            <div id="weather-info"></div>
+          </div>
+        </div>
+        <div class="p-4 mb-3 bg-body-tertiary rounded">
+          <h4 class="fst-italic">About</h4>
+          <p class="mb-0">A blog about anything. Created and developed by S. Alex</p>
+        </div>
+
+        <div>
+          <h4 class="fst-italic">Long posts</h4>
+          <ul class="list-unstyled">
+            <li>
+              <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" <% if (longPosts[0]) { %> href="/read-more/long-posts/0" <% } else { %> href="#" <% } %>>
+                <svg class="bd-placeholder-img" width="100%" height="96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"></rect></svg>
+                <div class="col-lg-8">
+                  <h6 class="mb-0"><%= longPosts[0] ? longPosts[0].title : 'This is a long post title' %></h6>
+                  <small class="text-body-secondary"><%= longPosts[0].fullDate %></small>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" <% if (longPosts[1]) { %> href="/read-more/long-posts/1" <% } else { %> href="#" <% } %>>
+                <svg class="bd-placeholder-img" width="100%" height="96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"></rect></svg>
+                <div class="col-lg-8">
+                  <h6 class="mb-0"><%= longPosts[1] ? longPosts[1].title : 'This is another long post title' %></h6>
+                  <small class="text-body-secondary"><%= longPosts[1] ? longPosts[1].fullDate : '22 January, 2024' %></small>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" <% if (longPosts[2]) { %> href="/read-more/long-posts/2" <% } else { %> href="#" <% } %>>
+                <svg class="bd-placeholder-img" width="100%" height="96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"></rect></svg>
+                <div class="col-lg-8">
+                  <h6 class="mb-0"><%= longPosts[2] ? longPosts[2].title : 'Longer blog post title: This one has multiple lines!'%></h6>
+                  <small class="text-body-secondary"><%= longPosts[2] ? longPosts[2].fullDate : '21 April, 2024' %></small>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+<%- include("partials/footer.ejs") %>
