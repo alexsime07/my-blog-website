@@ -1,9 +1,19 @@
 import express from "express";
 import bodyParser from "body-parser";
 import axios from "axios";
+import pg from "pg";
 
 const app = express();
 const port = 3000;
+
+const db = new pg.Client({
+  user: "postgres",
+  host: "localhost",
+  database: "blog",
+  password: "1357912",
+  port: 5432,
+});
+db.connect();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -69,7 +79,8 @@ const longPosts = [
 ];
 
 // Route to render the home page
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
+  await db.query("")
   res.render("index.ejs", {
     posts,
     featuredPosts,
