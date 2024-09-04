@@ -18,77 +18,26 @@ db.connect();
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Array to store posts
-const posts = [
-  {
-    title: "Business Model",
-    content:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis commodo ligula a dolor varius congue. Duis vulputate rhoncus facilisis. Vestibulum blandit blandit mauris, vel ultricies enim accumsan et. Etiam neque dolor, vestibulum euismod arcu nec, viverra euismod sem. Donec finibus elementum nisi et ultrices. Vivamus finibus blandit urna vitae venenatis. Curabitur consequat cursus orci. Donec venenatis ante vulputate mauris semper, id ultrices felis semper. Aenean massa nisi, maximus ut leo in, iaculis malesuada nisl. Proin ut convallis lectus.",
-  },
-  {
-    title: "Culture Wars",
-    content:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis commodo ligula a dolor varius congue. Duis vulputate rhoncus facilisis. Vestibulum blandit blandit mauris, vel ultricies enim accumsan et. Etiam neque dolor, vestibulum euismod arcu nec, viverra euismod sem. Donec finibus elementum nisi et ultrices. Vivamus finibus blandit urna vitae venenatis. Curabitur consequat cursus orci. Donec venenatis ante vulputate mauris semper, id ultrices felis semper. Aenean massa nisi, maximus ut leo in, iaculis malesuada nisl. Proin ut convallis lectus.",
-  },
-  {
-    title: "Summer Travel Guide",
-    content:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis commodo ligula a dolor varius congue. Duis vulputate rhoncus facilisis. Vestibulum blandit blandit mauris, vel ultricies enim accumsan et. Etiam neque dolor, vestibulum euismod arcu nec, viverra euismod sem. Donec finibus elementum nisi et ultrices. Vivamus finibus blandit urna vitae venenatis. Curabitur consequat cursus orci. Donec venenatis ante vulputate mauris semper, id ultrices felis semper. Aenean massa nisi, maximus ut leo in, iaculis malesuada nisl. Proin ut convallis lectus.",
-  },
-];
-
-const businessPosts = [
-  {
-    title: "Business Model",
-    content:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis commodo ligula a dolor varius congue. Duis vulputate rhoncus facilisis. Vestibulum blandit blandit mauris, vel ultricies enim accumsan et. Etiam neque dolor, vestibulum euismod arcu nec, viverra euismod sem. Donec finibus elementum nisi et ultrices. Vivamus finibus blandit urna vitae venenatis. Curabitur consequat cursus orci. Donec venenatis ante vulputate mauris semper, id ultrices felis semper. Aenean massa nisi, maximus ut leo in, iaculis malesuada nisl. Proin ut convallis lectus.",
-    fullDate: "09 July, 2024"  
-  },
-];
-const culturePosts = [
-  {
-    title: "Culture Wars",
-    content:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis commodo ligula a dolor varius congue. Duis vulputate rhoncus facilisis. Vestibulum blandit blandit mauris, vel ultricies enim accumsan et. Etiam neque dolor, vestibulum euismod arcu nec, viverra euismod sem. Donec finibus elementum nisi et ultrices. Vivamus finibus blandit urna vitae venenatis. Curabitur consequat cursus orci. Donec venenatis ante vulputate mauris semper, id ultrices felis semper. Aenean massa nisi, maximus ut leo in, iaculis malesuada nisl. Proin ut convallis lectus.",
-      fullDate: "08 October, 2023"  
-
-  },
-];
-const travelPosts = [
-  {
-    title: "Summer Travel Guide",
-    content:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis commodo ligula a dolor varius congue. Duis vulputate rhoncus facilisis. Vestibulum blandit blandit mauris, vel ultricies enim accumsan et. Etiam neque dolor, vestibulum euismod arcu nec, viverra euismod sem. Donec finibus elementum nisi et ultrices. Vivamus finibus blandit urna vitae venenatis. Curabitur consequat cursus orci. Donec venenatis ante vulputate mauris semper, id ultrices felis semper. Aenean massa nisi, maximus ut leo in, iaculis malesuada nisl. Proin ut convallis lectus.",
-      fullDate: "17 July, 2024"  
-
-  },
-];
-const featuredPosts = [
-  {
-    title: "Business Model",
-    content:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis commodo ligula a dolor varius congue. Duis vulputate rhoncus facilisis. Vestibulum blandit blandit mauris, vel ultricies enim accumsan et. Etiam neque dolor, vestibulum euismod arcu nec, viverra euismod sem. Donec finibus elementum nisi et ultrices. Vivamus finibus blandit urna vitae venenatis. Curabitur consequat cursus orci. Donec venenatis ante vulputate mauris semper, id ultrices felis semper. Aenean massa nisi, maximus ut leo in, iaculis malesuada nisl. Proin ut convallis lectus.",
-  },
-];
-const longPosts = [
-  {
-    title: "Business Model",
-    content:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis commodo ligula a dolor varius congue. Duis vulputate rhoncus facilisis. Vestibulum blandit blandit mauris, vel ultricies enim accumsan et. Etiam neque dolor, vestibulum euismod arcu nec, viverra euismod sem. Donec finibus elementum nisi et ultrices. Vivamus finibus blandit urna vitae venenatis. Curabitur consequat cursus orci. Donec venenatis ante vulputate mauris semper, id ultrices felis semper. Aenean massa nisi, maximus ut leo in, iaculis malesuada nisl. Proin ut convallis lectus.",
-    fullDate: "17 July, 2024"
-  },
-];
+let posts = [];
 
 // Route to render the home page
+
 app.get("/", async (req, res) => {
-  await db.query("")
-  res.render("index.ejs", {
+  try {
+    const result = await db.query("SELECT * FROM posts ORDER BY id ASC");
+    posts = result.rows;
+    const resultFeatured = await db.query("SELECT * FROM posts WHERE type = 'featured' ORDER BY created_at DESC LIMIT 1");
+    const featuredPost = resultFeatured.rows[0] || null;
+
+    res.render("index.ejs", {
     posts,
-    featuredPosts,
-    longPosts,
-    businessPosts,
-    culturePosts,
+    featuredPost
   });
+  } catch (err) {
+    console.log(err);
+  }
 });
+
 
 app.get('/weather', async (req, res) => {
   const city = req.query.city; // Get the city from the query parameters
@@ -111,49 +60,28 @@ app.get('/weather', async (req, res) => {
 
 // Route to handle the post creation
 app.get("/create-post", (req, res) => {
-  res.render("create-post.ejs", { posts });
+  res.render("create-post.ejs");
 });
 
 // Route to handle the form submission
-app.post("/create-post", (req, res) => {
+app.post("/create-post", async (req, res) => {
   const date = new Date();
   const options = { day: 'numeric', month: 'long', year: 'numeric' };
   const fullDate = new Intl.DateTimeFormat('en-US', options).format(date);
   const { title, content, type, category } = req.body;
-  const newPost = { title, content, fullDate };
-  posts.push(newPost);
-
-  switch (category) {
-    case "business":
-      businessPosts.push(newPost);
-      break;
-    case "culture":
-      culturePosts.push(newPost);
-      break;
-    case "travel":
-      travelPosts.push(newPost);
-    default:
-      console.log("No category selected.");
+  try {
+    await db.query("INSERT INTO posts (title, content, type, category, created_at) VALUES ($1, $2, $3, $4, $5)", [title, content, type, category, fullDate]);
+    res.redirect("/");
+  } catch(err) {
+    console.log(err);
   }
-
-  switch (type) {
-    case "featured":
-      featuredPosts.push(newPost);
-      break;
-    case "longpost":
-      longPosts.push(newPost);
-      break;
-    default:
-      console.log("No type selected.");
-  }
-
-  res.redirect("/");
+  //  const newPost = { title, content, fullDate };
+  //  posts.push(newPost);
 });
 
 // Route to render the edit form for a specific post
 app.get("/edit-post/:index", (req, res) => {
   const index = req.params.index;
-  console.log(req.params);
   const postToEdit = posts[index];
   res.render("edit-post.ejs", { index, postToEdit });
 });
@@ -188,16 +116,46 @@ app.get("/read-more/culture-posts/:index", (req, res) => {
   res.render("culture-posts.ejs", { index, culturePosts });
 });
 
-app.get("/business", (req, res) => {
-  res.render("business.ejs", { businessPosts });
+app.get("/business", async (req, res) => {
+  try {
+    const resultBusiness = await db.query("SELECT * FROM posts WHERE category = 'business' ORDER BY created_at DESC");
+    const businessPosts = resultBusiness.rows || null;
+
+    res.render("business.ejs", {
+    posts,
+    businessPosts
+  });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
-app.get("/culture", (req, res) => {
-  res.render("culture.ejs", { culturePosts });
+app.get("/culture", async (req, res) => {
+  try {
+    const resultCulture = await db.query("SELECT * FROM posts WHERE category = 'culture' ORDER BY created_at DESC");
+    const culturePosts = resultCulture.rows || null;
+
+    res.render("culture.ejs", {
+    posts,
+    culturePosts
+  });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
-app.get("/travel", (req, res) => {
-  res.render("travel.ejs", { travelPosts });
+app.get("/travel", async (req, res) => {
+  try {
+    const resultTravel = await db.query("SELECT * FROM posts WHERE category = 'travel' ORDER BY created_at DESC");
+    const travelPosts = resultTravel.rows || null;
+
+    res.render("travel.ejs", {
+    posts,
+    travelPosts
+  });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 // Route to handle the form submission for editing a post
