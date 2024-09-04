@@ -28,17 +28,25 @@ app.get("/", async (req, res) => {
     posts = result.rows;
     const resultFeatured = await db.query("SELECT * FROM posts WHERE type = 'featured' ORDER BY created_at DESC LIMIT 1");
     const featuredPost = resultFeatured.rows[0] || null;
-
+    const resultLong = await db.query("SELECT * FROM posts WHERE type = 'longpost' ORDER BY created_at DESC");
+    const longPosts = resultLong.rows || null;
+    const resultCulture = await db.query("SELECT * FROM posts WHERE category = 'culture' ORDER BY created_at DESC LIMIT 1");
+    const culturePost = resultCulture.rows[0] || null;
+    const resultBusiness = await db.query("SELECT * FROM posts WHERE category = 'business' ORDER BY created_at DESC LIMIT 1");
+    const businessPost = resultBusiness.rows[0] || null;
     res.render("index.ejs", {
     posts,
-    featuredPost
+    featuredPost,
+    culturePost, 
+    businessPost, 
+    longPosts
   });
   } catch (err) {
     console.log(err);
   }
 });
 
-
+  // Route to fetch weather data
 app.get('/weather', async (req, res) => {
   const city = req.query.city; // Get the city from the query parameters
 
@@ -79,41 +87,62 @@ app.post("/create-post", async (req, res) => {
   //  posts.push(newPost);
 });
 
-// Route to render the edit form for a specific post
-app.get("/edit-post/:index", (req, res) => {
-  const index = req.params.index;
-  const postToEdit = posts[index];
-  res.render("edit-post.ejs", { index, postToEdit });
+// Route to display the edit form
+app.get("/edit-post/:postID", async (req, res) => {
+  const postID = req.params.postID;
+  try {
+    const result = await db.query("SELECT * FROM posts WHERE id = $1", [postID]);
+
+    // Check if the post was found
+    if (result.rows.length > 0) {
+      const post = result.rows[0]; // Access the first (and only) post
+
+      res.render("edit-post.ejs", { post });
+    } else {
+      res.status(404).send("Post not found");
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Server error");
+  }
 });
 
-app.get("/read-more/:index", (req, res) => {
-  const index = req.params.index;
+// Route to handle form submission for updating a post
+app.post("/edit-post/:postID", async (req, res) => {
+  const postID = req.params.postID;
+  const { title, content, type, category } = req.body; // Extract data from the form
+  try {
+    // Update the post in the database
+    await db.query(
+      "UPDATE posts SET title = $1, content = $2, type = $3, category = $4 WHERE id = $5",
+      [title, content, type, category, postID]
+    );
 
-  res.render("read-more.ejs", { index, posts });
+    // Redirect or send a success message
+    res.redirect(`/read-more/${postID}`);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Server error");
+  }
 });
 
-app.get("/read-more/long-posts/:index", (req, res) => {
-  const index = req.params.index;
 
-  res.render("long-posts.ejs", { index, longPosts });
-});
 
-app.get("/read-more/featured-posts/:index", (req, res) => {
-  const index = req.params.index;
+app.get("/read-more/:postID", async (req, res) => {
+  const postID = req.params.postID; // Get the post ID from the URL
+  try {
+    const result = await db.query("SELECT * FROM posts WHERE id = $1", [postID]);
+    const post = result.rows[0]; // Get the specific post
 
-  res.render("featured-posts.ejs", { index, featuredPosts });
-});
-
-app.get("/read-more/business-posts/:index", (req, res) => {
-  const index = req.params.index;
-
-  res.render("business-posts.ejs", { index, businessPosts });
-});
-
-app.get("/read-more/culture-posts/:index", (req, res) => {
-  const index = req.params.index;
-
-  res.render("culture-posts.ejs", { index, culturePosts });
+    if (post) {
+      res.render("read-more.ejs", { post });
+    } else {
+      res.status(404).send("Post not found");
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Server error");
+  }
 });
 
 app.get("/business", async (req, res) => {
@@ -158,19 +187,16 @@ app.get("/travel", async (req, res) => {
   }
 });
 
-// Route to handle the form submission for editing a post
-app.post("/edit-post/:index", (req, res) => {
-  const index = req.params.index;
-  const { title, content } = req.body;
-  posts[index] = { title, content };
-  res.redirect("/");
-});
-
 // Route to handle the deletion of a post
-app.get("/delete-post/:index", (req, res) => {
-  const index = req.params.index;
-  posts.splice(index, 1);
-  res.redirect("/");
+app.get("/delete/:postID", async (req, res) => {
+  const postID = req.params.postID; // Get the post ID from the URL
+  try {
+    await db.query("DELETE FROM posts WHERE id = $1", [postID]);
+    res.redirect("/");
+
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 app.use(express.static('public'));

@@ -10,8 +10,7 @@
       <% if (featuredPost) { %>
         <h1 class="display-4 fst-italic" id="mainh1"><%= featuredPost.title %></h1>
         <p class="lead my-3"><%= featuredPost.content.length > 120 ? featuredPost.content.substring(0, 120) + '...' : featuredPost.content %></p> 
-        <!--Must add endpoint to track specific post-->
-          <a href="/read-more/featured-posts/">Continue Reading</a>
+          <a href="/read-more/<%= featuredPost.id %>">Continue Reading</a>
           <% } else { %>
             <!-- Default message if no featured post is found -->
             <h1 class="display-4 fst-italic" id="mainh1">No Posts Yet</h1>
@@ -27,15 +26,20 @@
         <div class="col p-4 d-flex flex-column position-static">
           <strong class="d-inline-block mb-2 text-primary-emphasis">Culture</strong>
           <!--Displaying the most recent culture post-->
+          <% if (culturePost) { %>
+            <h3 class="mb-0"><%= culturePost.title %></h3>
+            <p class="card-text mb-auto"><%= culturePost.content.substring(0, 120) + '...' %></p>
+            <div class="mb-1 text-body-secondary"><%= culturePost.date %></div>
+            <a href="read-more/<%= culturePost.id %>" class="icon-link gap-1 icon-link-hover stretched-link">
+              Continue reading
+              <svg class="bi"><use xlink:href="#chevron-right"></use></svg>
+            </a>
+          <% } else {  %>
+           <!--Default message if no culture post-->
           <h3 class="mb-0">Post title</h3>
           <p class="card-text mb-auto">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
           <div class="mb-1 text-body-secondary">Post Date</div>
-
-          <!--Must add endpoint to track specific post-->
-          <a href="read-more/culture-posts/" class="icon-link gap-1 icon-link-hover stretched-link">
-            Continue reading
-            <svg class="bi"><use xlink:href="#chevron-right"></use></svg>
-          </a>
+        <%  } %>
         </div>
         <div class="col-auto d-none d-lg-block">
           <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
@@ -46,14 +50,21 @@
       <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
         <div class="col p-4 d-flex flex-column position-static">
           <strong class="d-inline-block mb-2 text-success-emphasis">Business</strong>
+          <% if (businessPost) { %>
+            <h3 class="mb-0"><%= businessPost.title %></h3>
+              <p class="card-text mb-auto"><%= businessPost.content.substring(0, 120) %></p>
+              <div class="mb-1 text-body-secondary"><%= businessPost.date %></div>
+              <a href="/read-more/<%= businessPost.id %>" class="icon-link gap-1 icon-link-hover stretched-link">
+                Continue reading
+                <svg class="bi"><use xlink:href="#chevron-right"></use></svg>
+              </a>
+              <% } else { %>
+          <!--Default message if no business post-->
             <h3 class="mb-0">Post title</h3>
               <p class="card-text mb-auto">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
               <div class="mb-1 text-body-secondary">Post date</div>
-              <!--Must add endpoint to track specific post-->
-             <a href="/read-more/business-posts/" class="icon-link gap-1 icon-link-hover stretched-link">
-            Continue reading
-            <svg class="bi"><use xlink:href="#chevron-right"></use></svg>
-          </a>
+              <% } %>
+             
         </div>
         <div class="col-auto d-none d-lg-block">
           <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
@@ -68,15 +79,17 @@
       <h2>Posts</h2>
 <% if (posts.length > 0) { %>
   <ul>
-    <% posts.forEach((post, index) => { %>
-      <li class="list-group-item">
-        <h3><%= post.title %></h3>
-        <p><%= post.content.substring(0,400) %>...</p>
-        <a href="/edit-post/<%= index %>">Edit</a> | 
-        <a href="/delete-post/<%= index %>">Delete</a> |
-        <a href="/read-more/<%= index %>">Read More</a>
-      </li>
-    <% }); %>
+    <% posts.forEach(post => { %>
+      <div class="post">
+        <h2><%= post.title %></h2>
+        <p><%= post.content.substring(0, 400) %>...</p>
+        <a href="/read-more/<%= post.id %>">Read More</a>
+        <a href="/edit-post/<%= post.id %>">Edit</a>
+        <a href="/delete/<%= post.id %>">Delete</a>
+
+
+      </div>
+    <% }) %>
   </ul>
 <% } else { %>
   <p>No posts available.</p>
@@ -104,35 +117,29 @@
         <div>
           <h4 class="fst-italic">Long posts</h4>
           <ul class="list-unstyled">
-            <li>
-              <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" href="#">
-                <svg class="bd-placeholder-img" width="100%" height="96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"></rect></svg>
-                <div class="col-lg-8">
-                  <h6 class="mb-0">This is a long post title</h6>
-                  <small class="text-body-secondary">21 April, 2024</small>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" href="#">
-                <svg class="bd-placeholder-img" width="100%" height="96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"></rect></svg>
-                <div class="col-lg-8">
-                  <h6 class="mb-0">This is another long post title</h6>
-                  <small class="text-body-secondary">22 January, 2024</small>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" href="#">
-                <svg class="bd-placeholder-img" width="100%" height="96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"></rect></svg>
-                <div class="col-lg-8">
-                  <h6 class="mb-0">Longer blog post title: This one has multiple lines!</h6>
-                  <small class="text-body-secondary">21 April, 2024</small>
-                </div>
-              </a>
-            </li>
+            <% if (longPosts && longPosts.length > 0) { %>
+              <% longPosts.forEach(function(post) { %>
+                <li>
+                  <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" href="read-more/<%= post.id %>">
+                    <svg class="bd-placeholder-img" width="100%" height="96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
+                      <rect width="100%" height="100%" fill="#777"></rect>
+                    </svg>
+                    <div class="col-lg-8">
+                      <h6 class="mb-0"><%= post.title %></h6>
+                      <!--Code to change date format-->
+                      <% let options = { year: 'numeric', month: 'long', day: 'numeric' }; %>
+                      <% let formattedDate = new Date(post.created_at).toLocaleDateString('en-US', options); %>
+                      <small class="text-body-secondary"><%= formattedDate %></small>
+                     </div>
+                  </a>
+                </li>
+              <% }) %>
+            <% } else { %>
+              <li>No long posts available.</li>
+            <% } %>
           </ul>
         </div>
+        
       </div>
     </div>
   </div>
