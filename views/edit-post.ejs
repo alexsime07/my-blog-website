@@ -9,30 +9,39 @@
   <h1>Edit Post</h1>
 
   <form action="/edit-post/<%= post.id %>" method="post">
-    <label for="type">Post Type</label><br>
+    <label for="type">Post Type</label>
+    <br>
     <select name="type" id="type">
-    <option value="none">none</option>
-    <option value="featured">Featured</option>
-    <option value="longpost">Long Post</option>
-  </select>
-  <br>
-  <label for="category">Post Category</label><br>
-  <select name="category" id="category">
-    <option value="none">none</option>
-    <option value="culture">Culture</option>
-    <option value="business">Business</option>
-    <option value="travel">Travel</option>
-  </select>
-  <br>
+        <option value="none" <%= post.type === 'none' ? 'selected' : '' %>>None</option>
+        <option value="featured" <%= post.type === 'featured' ? 'selected' : '' %>>Featured</option>
+        <option value="longpost" <%= post.type === 'longpost' ? 'selected' : '' %>>Long Post</option>
+    </select>
+    <br>
+
+    <label for="category">Post Category</label>
+    <br>
+    <select name="category" id="category">
+        <option value="none" <%= post.category === 'none' ? 'selected' : '' %>>None</option>
+        <option value="culture" <%= post.category === 'culture' ? 'selected' : '' %>>Culture</option>
+        <option value="business" <%= post.category === 'business' ? 'selected' : '' %>>Business</option>
+        <option value="travel" <%= post.category === 'travel' ? 'selected' : '' %>>Travel</option>
+    </select>
+    <br>
     <label for="title">Title:</label>
+    <br>
     <input type="text" id="title" name="title" value="<%= post.title %>" required>
     <br>
+
     <label for="content">Content:</label>
     <br>
     <textarea id="content" name="content" rows="4" required><%= post.content %></textarea>
     <br>
+
+    
+
     <button type="submit">Save Changes</button>
-  </form>
+</form>
+
   <a href="/">Back to Home</a>
 </body>
 </html>

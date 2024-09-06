@@ -110,7 +110,8 @@ app.get("/edit-post/:postID", async (req, res) => {
 // Route to handle form submission for updating a post
 app.post("/edit-post/:postID", async (req, res) => {
   const postID = req.params.postID;
-  const { title, content, type, category } = req.body; // Extract data from the form
+  const { title, content, type, category } = req.body;
+
   try {
     // Update the post in the database
     await db.query(
@@ -118,13 +119,14 @@ app.post("/edit-post/:postID", async (req, res) => {
       [title, content, type, category, postID]
     );
 
-    // Redirect or send a success message
-    res.redirect(`/read-more/${postID}`);
+    // Redirect to the home page after saving changes
+    res.redirect("/");
   } catch (err) {
     console.log(err);
     res.status(500).send("Server error");
   }
 });
+
 
 
 
